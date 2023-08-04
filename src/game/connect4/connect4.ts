@@ -1,11 +1,9 @@
 import type * as socketio from 'socket.io'
 import Game from '../game'
+import * as gameEvents from './events'
+import type * as events from '../../types/events'
 
 export default class Connect4 extends Game {
-  public static AddListeners (socket: socketio.Socket): void {
-    // socket.on()
-  }
-
   // Matrix describing which player_id has a chip in which cell
   gameBoard: string[][] = [
     ['', '', '', '', '', '', ''],
@@ -33,7 +31,9 @@ export default class Connect4 extends Game {
     super('Connect4', 2, 2)
   }
 
-  Start (): void {
-
+  AddListeners (socket: socketio.Socket): void {
+    socket.on(gameEvents.DropChipEvent.NAME, (e: gameEvents.DropChipEvent, callback: events.EventCallback) => {
+      // drop chip
+    })
   }
 }

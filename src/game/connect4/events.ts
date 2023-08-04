@@ -1,8 +1,8 @@
 export class DropChipEvent {
   public static readonly NAME = 'drop_chip'
 
-  roomCode: string
-  constructor (roomCode: string) {
-    this.roomCode = roomCode
+  column: number
+  constructor (column: number) {
+    this.column = column
   }
 }

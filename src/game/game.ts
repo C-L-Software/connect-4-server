@@ -1,3 +1,5 @@
+import type * as socketio from 'socket.io'
+
 export default abstract class Game {
   gameName: string
   minPlayers: number
@@ -9,5 +11,5 @@ export default abstract class Game {
     this.maxPlayers = maxPlayers
   }
 
-  public abstract Start (): void
+  public abstract AddListeners (socket: socketio.Socket): void
 }

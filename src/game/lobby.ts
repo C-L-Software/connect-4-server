@@ -30,4 +30,8 @@ export default class Lobby {
   GetPlayer (player: Player): Player | undefined {
     return this.players.find(p => p.id === player.id)
   }
+
+  Start (): void {
+    this.players.forEach(p => { this.game.AddListeners(p.socket) })
+  }
 }

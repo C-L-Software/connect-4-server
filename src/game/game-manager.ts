@@ -12,8 +12,6 @@ export default class GameManager {
   }
 
   onConnection (socket: socketio.Socket): void {
-    this.addGameTypeListeners(socket)
-
     const player = new Player(socket)
     console.log(`Player with id ${player.id} has connected`)
 
@@ -52,7 +50,7 @@ export default class GameManager {
       const currentLobby = this.getPlayerLobby(player.id)
       if (currentLobby === undefined) { callback(new Error(`Player ${player.id} is not in a lobby to start a game`), null); return }
 
-      currentLobby.game.Start()
+      currentLobby.Start()
       console.log(`Player ${player.id} has started game lobby ${currentLobby.joinCode}`)
 
       callback(null, 'TODO: SEND STATE HERE')
@@ -70,11 +68,6 @@ export default class GameManager {
         console.log(`Deleting lobby ${currentLobby.joinCode} since it has no players`)
       }
     })
-  }
-
-  // Each game type has specific event listeners
-  addGameTypeListeners (socket: socketio.Socket): void {
-    Connect4.AddListeners(socket)
   }
 
   findLobby (joinCode: string): Lobby | undefined {
