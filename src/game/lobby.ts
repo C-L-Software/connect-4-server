@@ -1,3 +1,4 @@
+import * as utils from '../utils/utils'
 import { type GameType } from './game-type'
 import type Player from './player'
 
@@ -6,9 +7,9 @@ export default class Lobby {
   players: Player[]
   gameType: GameType
 
-  constructor (gameType: GameType, joinCode: string) {
+  constructor (gameType: GameType) {
     this.gameType = gameType
-    this.joinCode = joinCode
+    this.joinCode = utils.GenerateJoinCode()
     this.players = []
   }
 

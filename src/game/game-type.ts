@@ -6,17 +6,19 @@
  */
 
 export class GameType {
-  minPlayers: number
-  maxPlayers: number
+    gameName: string
+    minPlayers: number
+    maxPlayers: number
 
-  constructor (minPlayers: number, maxPlayers: number) {
-    this.minPlayers = minPlayers
-    this.maxPlayers = maxPlayers
-  }
+    constructor(gameName: string, minPlayers: number, maxPlayers: number) {
+        this.gameName = gameName
+        this.minPlayers = minPlayers
+        this.maxPlayers = maxPlayers
+    }
 }
 
 export class Connect4 extends GameType {
-  constructor () {
-    super(2, 2)
-  }
+    constructor() {
+        super('Connect4', 2, 2)
+    }
 }

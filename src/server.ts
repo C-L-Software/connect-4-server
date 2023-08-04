@@ -2,7 +2,7 @@ import * as express from 'express'
 import * as http from 'http'
 import * as socketio from 'socket.io'
 import * as path from 'path'
-import * as events from './types/events'
+import GameManager from './game/game-manager'
 
 const app = express.default()
 
@@ -16,13 +16,9 @@ app.get('/test', (_req, res) => {
 
 const server = http.createServer(app)
 const io = new socketio.Server(server)
+const gameManager = new GameManager()
 
-io.on('connection', (socket: socketio.Socket) => {
-  socket.on(events.JoinGameEvent.NAME, (e: events.JoinGameEvent) => {
-    // Subscribe this socket to the particular room code
-    console.log(`Socket has joined room ${e.roomCode}`)
-  })
-})
+io.on('connection', (socket: socketio.Socket) => { gameManager.onConnection(socket) })
 
 server.listen(3000, () => {
   console.log('Running at localhost:3000')

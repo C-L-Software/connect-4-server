@@ -8,15 +8,31 @@
     <title>Document</title>
   </head>
   <body>
-    <button onClick="sendMsg()">Hit Me</button>
+    <button onClick="newGame()">New Game</button>
+    <button onClick="joinGame()">Join Game</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
       const socket = io("http://localhost:3000");
 
-      function sendMsg() {
-        socket.emit("join_game", {
-            time: 'this is the time value'
+      let roomCode
+
+      function newGame() {
+        socket.emit("new_game", {}, (success, resp) => {
+            if (!success)
+                return console.log(`Failed to create new game with error: ${resp}`)
+
+            console.log(`Created lobby with code ${resp}`)
+            roomCode = resp
+        });
+      }
+
+      function joinGame() {
+        socket.emit("join_game", {roomCode: roomCode}, (success, resp) => {
+            if (!success)
+                return console.log(`Failed to join game with error: ${resp}`)
+
+            console.log(`Joined lobby with code ${resp}`)
         });
       }
     </script>
