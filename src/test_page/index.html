@@ -18,9 +18,9 @@
       let roomCode
 
       function newGame() {
-        socket.emit("new_game", {}, (success, resp) => {
-            if (!success)
-                return console.log(`Failed to create new game with error: ${resp}`)
+        socket.emit("new_game", {}, (error, resp) => {
+            if (error)
+                return console.log(error)
 
             console.log(`Created lobby with code ${resp}`)
             roomCode = resp
@@ -28,9 +28,9 @@
       }
 
       function joinGame() {
-        socket.emit("join_game", {roomCode: roomCode}, (success, resp) => {
-            if (!success)
-                return console.log(`Failed to join game with error: ${resp}`)
+        socket.emit("join_game", {roomCode: roomCode}, (error, resp) => {
+            if (error)
+                return console.log(error)
 
             console.log(`Joined lobby with code ${resp}`)
         });

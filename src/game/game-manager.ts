@@ -1,6 +1,5 @@
 import type * as socketio from 'socket.io'
 import * as events from '../types/events'
-import { AddGameSocketHooks } from './game'
 import Connect4 from './connect4/connect4'
 import Lobby from './lobby'
 import Player from './player'
@@ -13,7 +12,7 @@ export default class GameManager {
   }
 
   onConnection (socket: socketio.Socket): void {
-    AddGameSocketHooks(socket)
+    this.addGameTypeListeners(socket)
 
     const player = new Player(socket)
     console.log(`Player with id ${player.id} has connected`)
@@ -66,7 +65,16 @@ export default class GameManager {
       if (currentLobby === undefined) return
 
       currentLobby.KickPlayer(player)
+      if (currentLobby.players.length === 0) {
+        this.lobbies = this.lobbies.filter(l => l.joinCode !== currentLobby.joinCode)
+        console.log(`Deleting lobby ${currentLobby.joinCode} since it has no players`)
+      }
     })
+  }
+
+  // Each game type has specific event listeners
+  addGameTypeListeners (socket: socketio.Socket): void {
+    Connect4.AddListeners(socket)
   }
 
   findLobby (joinCode: string): Lobby | undefined {
@@ -74,7 +82,6 @@ export default class GameManager {
   }
 
   getPlayerLobby (playerId: string): Lobby | undefined {
-    console.log('Search lobbies', this.lobbies, 'for player id', playerId)
     return this.lobbies.find(l => l.players.find(p => p.id === playerId) !== undefined)
   }
 }
