@@ -15,7 +15,9 @@
       const socket = io("http://localhost:3000");
 
       function sendMsg() {
-        socket.emit("message", "HELLO WORLD");
+        socket.emit("join_game", {
+            time: 'this is the time value'
+        });
       }
     </script>
   </body>

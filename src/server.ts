@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as http from 'http'
 import * as socketio from 'socket.io'
 import * as path from 'path'
+import * as events from './types/events'
 
 const app = express.default()
 
@@ -17,8 +18,9 @@ const server = http.createServer(app)
 const io = new socketio.Server(server)
 
 io.on('connection', (socket: socketio.Socket) => {
-  socket.on('message', (message: socketio.Event) => {
-    console.log(message)
+  socket.on(events.JoinGameEvent.NAME, (e: events.JoinGameEvent) => {
+    // Subscribe this socket to the particular room code
+    console.log(`Socket has joined room ${e.roomCode}`)
   })
 })
 
