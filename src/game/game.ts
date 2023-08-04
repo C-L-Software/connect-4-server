@@ -1,18 +1,21 @@
-import type Player from './player'
-import { type GameType } from './game-type'
+import type * as socketio from 'socket.io'
+import Connect4 from './connect4/connect4'
 
-export default class Game {
-  gameType: GameType
-  players: Player[]
+export default abstract class Game {
+  gameName: string
+  minPlayers: number
+  maxPlayers: number
 
-  constructor (gameType: GameType) {
-    this.gameType = gameType
-    this.players = []
+  constructor (gameName: string, minPlayers: number, maxPlayers: number) {
+    this.gameName = gameName
+    this.minPlayers = minPlayers
+    this.maxPlayers = maxPlayers
   }
 
-  AddPlayer (player: Player): void {
-    if (this.players.length >= this.gameType.maxPlayers) { throw new Error(`This game only supports ${this.gameType.maxPlayers}`) }
+  public abstract Start (): void
+}
 
-    this.players.push(player)
-  }
+// This method adds the specific event listeners for each game type
+export function AddGameSocketHooks (socket: socketio.Socket): void {
+  Connect4.AddListeners(socket)
 }

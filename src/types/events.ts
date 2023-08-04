@@ -1,25 +1,18 @@
-export type EventCallback = (success: boolean, response: string) => void;
+export type EventCallback = (error: Error | null, response: any) => void
 
 export class NewGameEvent {
-    public static readonly NAME = 'new_game'
+  public static readonly NAME = 'new_game'
 }
 
 export class JoinGameEvent {
-    public static readonly NAME = 'join_game'
+  public static readonly NAME = 'join_game'
 
-    roomCode: string
-
-    constructor(roomCode: string) {
-        this.roomCode = roomCode
-    }
+  roomCode: string
+  constructor (roomCode: string) {
+    this.roomCode = roomCode
+  }
 }
 
-export class LeaveGameEvent {
-    public static readonly NAME = 'leave_game'
-
-    roomCode: string
-
-    constructor(roomCode: string) {
-        this.roomCode = roomCode
-    }
+export class StartGameEvent {
+  public static readonly NAME = 'start_game'
 }
