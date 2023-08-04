@@ -16,12 +16,10 @@ app.get('/test', (_req, res) => {
 const server = http.createServer(app)
 const io = new socketio.Server(server)
 
-io.on('connection', (...params) => {
-  console.log(params)
-})
-
-io.on('message', (...params) => {
-  console.log(params)
+io.on('connection', (socket: socketio.Socket) => {
+  socket.on('message', (message: socketio.Event) => {
+    console.log(message)
+  })
 })
 
 server.listen(3000, () => {
