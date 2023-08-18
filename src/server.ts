@@ -15,7 +15,12 @@ app.get('/test', (_req, res) => {
 })
 
 const server = http.createServer(app)
-const io = new socketio.Server(server)
+const io = new socketio.Server(server, {
+  cors: {
+    origin: 'http://192.168.1.92:3000',
+    methods: ['GET', 'POST']
+  }
+})
 const gameManager = new GameManager()
 
 io.on('connection', (socket: socketio.Socket) => { gameManager.onConnection(socket) })

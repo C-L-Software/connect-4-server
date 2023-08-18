@@ -13,26 +13,26 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
-      const socket = io("http://localhost:3000");
+      const socket = io("http://192.168.1.92:3000", { transports: ['websocket', 'polling', 'flashsocket'] });
 
-      let roomCode
+      let joinCode
 
       function newGame() {
         socket.emit("new_game", {}, (error, resp) => {
             if (error)
                 return console.log(error)
 
-            console.log(`Created lobby with code ${resp}`)
-            roomCode = resp
+            console.log(`Created lobby with code ${resp.joinCode}`)
+            joinCode = resp.joinCode
         });
       }
 
       function joinGame() {
-        socket.emit("join_game", {roomCode: roomCode}, (error, resp) => {
+        socket.emit("join_game", {joinCode: joinCode}, (error, resp) => {
             if (error)
                 return console.log(error)
 
-            console.log(`Joined lobby with code ${resp}`)
+            console.log(`Joined lobby with code ${joinCode}`)
         });
       }
     </script>

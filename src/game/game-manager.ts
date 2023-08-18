@@ -1,5 +1,5 @@
 import type * as socketio from 'socket.io'
-import * as events from '../types/events'
+import * as e from '../types/events'
 import Connect4 from './connect4/connect4'
 import Lobby from './lobby'
 import Player from './player'
@@ -15,7 +15,7 @@ export default class GameManager {
     const player = new Player(socket)
     console.log(`Player with id ${player.id} has connected`)
 
-    socket.on(events.NewGameEvent.NAME, (e: events.NewGameEvent, callback: events.EventCallback) => {
+    socket.on(e.EventType.NEW_GAME, (e: e.NewGameEventRequest, callback: e.NewGameEventCallback) => {
       // Don't let a player create a new game if they are already in a game
       const currentLobby = this.getPlayerLobby(player.id)
       if (currentLobby !== undefined) { callback(new Error(`Player ${player.id} is already in lobby ${currentLobby?.joinCode}`), null); return }
@@ -28,32 +28,32 @@ export default class GameManager {
 
       console.log(`Player ${player.id} has created a ${lobby.game.gameName} lobby with code ${lobby.joinCode}`)
 
-      callback(null, lobby.joinCode)
+      callback(null, { joinCode: lobby.joinCode })
     })
 
-    socket.on(events.JoinGameEvent.NAME, (e: events.JoinGameEvent, callback: events.EventCallback) => {
+    socket.on(e.EventType.JOIN_GAME, (e: e.JoinGameEventRequest, callback: e.JoinGameEventCallback) => {
       // Don't let a player join a game if they are already in one
       const currentLobby = this.getPlayerLobby(player.id)
-      if (currentLobby !== undefined) { callback(new Error(`Player ${player.id} is already in lobby ${currentLobby?.joinCode}`), null); return }
+      if (currentLobby !== undefined) { callback(new Error(`Player ${player.id} is already in lobby ${currentLobby?.joinCode}`)); return }
 
-      const lobby = this.findLobby(e.roomCode)
-      if (lobby === undefined) { callback(new Error(`Could not find lobby with code ${e.roomCode}`), null); return }
+      const lobby = this.findLobby(e.joinCode)
+      if (lobby === undefined) { callback(new Error(`Could not find lobby with code ${e.joinCode}`)); return }
 
       lobby.AddPlayer(player)
       console.log(`Player ${player.id} has joined room ${lobby.joinCode}`)
 
-      callback(null, `Joined lobby with code ${lobby.joinCode}`)
+      callback(null)
     })
 
-    socket.on(events.StartGameEvent.NAME, (e: events.StartGameEvent, callback: events.EventCallback) => {
+    socket.on(e.EventType.START_GAME, (e: e.StartGameEventRequest, callback: e.StartGameEventCallback) => {
       // Don't let a player start a game if they are not in a lobby
       const currentLobby = this.getPlayerLobby(player.id)
-      if (currentLobby === undefined) { callback(new Error(`Player ${player.id} is not in a lobby to start a game`), null); return }
+      if (currentLobby === undefined) { callback(new Error(`Player ${player.id} is not in a lobby to start a game`)); return }
 
       currentLobby.Start()
       console.log(`Player ${player.id} has started game lobby ${currentLobby.joinCode}`)
 
-      callback(null, 'TODO: SEND STATE HERE')
+      callback(null)
     })
 
     socket.on('disconnect', (reason: socketio.DisconnectReason) => {

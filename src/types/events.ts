@@ -1,18 +1,21 @@
-export type EventCallback = (error: Error | null, response: any) => void
+import { type EmptyObject } from '../utils/utils'
 
-export class NewGameEvent {
-  public static readonly NAME = 'new_game'
+export enum EventType {
+  NEW_GAME = 'new_game',
+  JOIN_GAME = 'join_game',
+  START_GAME = 'start_game'
 }
 
-export class JoinGameEvent {
-  public static readonly NAME = 'join_game'
+export type BasicEventCallback = (error: Error | null) => void
 
-  roomCode: string
-  constructor (roomCode: string) {
-    this.roomCode = roomCode
-  }
-}
+export type NewGameEventRequest = EmptyObject
+export interface NewGameEventResponse { joinCode: string }
+export type NewGameEventCallback = (error: Error | null, response: NewGameEventResponse | null) => void
 
-export class StartGameEvent {
-  public static readonly NAME = 'start_game'
-}
+export interface JoinGameEventRequest { joinCode: string }
+export type JoinGameEventResponse = EmptyObject
+export type JoinGameEventCallback = BasicEventCallback
+
+export type StartGameEventRequest = EmptyObject
+export type StartGameEventResponse = EmptyObject
+export type StartGameEventCallback = BasicEventCallback

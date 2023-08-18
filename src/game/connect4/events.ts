@@ -1,8 +1,11 @@
-export class DropChipEvent {
-  public static readonly NAME = 'drop_chip'
+import { type EmptyObject } from '../../utils/utils'
+import { type BasicEventCallback } from '../../types/events'
 
-  column: number
-  constructor (column: number) {
-    this.column = column
-  }
+export enum EventType {
+  GAME_STATE = 'game_state',
+  DROP_CHIP = 'drop_chip',
 }
+
+export interface DropChipEventRequest { column: number }
+export type DropChipEventResponse = EmptyObject
+export type DropChipEventCallback = BasicEventCallback
