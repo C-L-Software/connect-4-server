@@ -17,7 +17,7 @@ app.get('/test', (_req, res) => {
 const server = http.createServer(app)
 const io = new socketio.Server(server, {
   cors: {
-    origin: 'http://192.168.1.92:3000',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST']
   }
 })

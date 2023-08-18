@@ -15,6 +15,9 @@ export default class GameManager {
     const player = new Player(socket)
     console.log(`Player with id ${player.id} has connected`)
 
+    // Let FE know it's connected
+    socket.emit('ack', 'hello world')
+
     socket.on(e.EventType.NEW_GAME, (e: e.NewGameEventRequest, callback: e.NewGameEventCallback) => {
       // Don't let a player create a new game if they are already in a game
       const currentLobby = this.getPlayerLobby(player.id)

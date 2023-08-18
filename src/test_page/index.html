@@ -10,17 +10,25 @@
   <body>
     <button onClick="newGame()">New Game</button>
     <button onClick="joinGame()">Join Game</button>
+    <button onClick="startGame()">Start game</button>
+    <button onClick="dropChip()">Drop Chip</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
       const socket = io("http://192.168.1.92:3000", { transports: ['websocket', 'polling', 'flashsocket'] });
 
+      socket.on("game_state", (state) => {
+        console.log('state', state)
+      })
+
       let joinCode
 
       function newGame() {
+        console.log('New game')
+
         socket.emit("new_game", {}, (error, resp) => {
             if (error)
-                return console.log(error)
+                return console.error(error)
 
             console.log(`Created lobby with code ${resp.joinCode}`)
             joinCode = resp.joinCode
@@ -28,11 +36,35 @@
       }
 
       function joinGame() {
+        console.log('Join game')
+
         socket.emit("join_game", {joinCode: joinCode}, (error, resp) => {
             if (error)
-                return console.log(error)
+                return console.error(error)
 
             console.log(`Joined lobby with code ${joinCode}`)
+        });
+      }
+
+      function startGame() {
+        console.log('Start game')
+
+        socket.emit("start_game", {}, (error) => {
+            if (error)
+                return console.error(error)
+
+            console.log(`Started game`)
+        });
+      }
+
+      function dropChip() {
+        console.log('Drop chip')
+
+        socket.emit("drop_chip", {column: 0}, (error) => {
+            if (error)
+                return console.error(error)
+            
+            console.log(`Dropped chip`)
         });
       }
     </script>
