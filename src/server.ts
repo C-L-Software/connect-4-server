@@ -1,5 +1,6 @@
+import * as fs from 'fs'
 import * as express from 'express'
-import * as http from 'http'
+import * as https from 'https'
 import * as socketio from 'socket.io'
 import * as path from 'path'
 import GameManager from './game/game-manager'
@@ -14,7 +15,10 @@ app.get('/test', (_req, res) => {
   res.sendFile(path.resolve('./src/test_page/index.html'))
 })
 
-const server = http.createServer(app)
+const server = https.createServer({
+  key: fs.readFileSync('/etc/letsencrypt/live/jlemon.org/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/jlemon.org/fullchain.pem')
+}, app)
 const io = new socketio.Server(server, {
   cors: {
     origin: 'https://jlemon.org',
