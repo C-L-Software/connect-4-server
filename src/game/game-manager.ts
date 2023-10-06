@@ -21,7 +21,7 @@ export default class GameManager {
     socket.on(e.EventType.NEW_GAME, (e: e.NewGameEventRequest, callback: e.NewGameEventCallback) => {
       // Don't let a player create a new game if they are already in a game
       const currentLobby = this.getPlayerLobby(player.id)
-      if (currentLobby !== undefined) { callback(new Error(`Player ${player.id} is already in lobby ${currentLobby?.joinCode}`), null); return }
+      if (currentLobby !== undefined) { callback(`Player ${player.id} is already in lobby ${currentLobby?.joinCode}`, null); return }
 
       // TODO: in another game jam we'll let the player choose the game type.
       // For now, we default to Connect4!
@@ -37,24 +37,15 @@ export default class GameManager {
     socket.on(e.EventType.JOIN_GAME, (e: e.JoinGameEventRequest, callback: e.JoinGameEventCallback) => {
       // Don't let a player join a game if they are already in one
       const currentLobby = this.getPlayerLobby(player.id)
-      if (currentLobby !== undefined) { callback(new Error(`Player ${player.id} is already in lobby ${currentLobby?.joinCode}`)); return }
+      if (currentLobby !== undefined) { callback(`Player ${player.id} is already in lobby ${currentLobby?.joinCode}`); return }
 
       const lobby = this.findLobby(e.joinCode)
-      if (lobby === undefined) { callback(new Error(`Could not find lobby with code ${e.joinCode}`)); return }
+      if (lobby === undefined) { callback(`Could not find lobby with code ${e.joinCode}`); return }
 
       lobby.AddPlayer(player)
       console.log(`Player ${player.id} has joined room ${lobby.joinCode}`)
 
-      callback(null)
-    })
-
-    socket.on(e.EventType.START_GAME, (e: e.StartGameEventRequest, callback: e.StartGameEventCallback) => {
-      // Don't let a player start a game if they are not in a lobby
-      const currentLobby = this.getPlayerLobby(player.id)
-      if (currentLobby === undefined) { callback(new Error(`Player ${player.id} is not in a lobby to start a game`)); return }
-
-      currentLobby.Start()
-      console.log(`Player ${player.id} has started game lobby ${currentLobby.joinCode}`)
+      if (lobby.players.length >= lobby.game.minPlayers) { lobby.Start() }
 
       callback(null)
     })

@@ -8,37 +8,56 @@
     <title>Document</title>
   </head>
   <body>
+    <input id="joinCode"></input>
     <button onClick="newGame()">New Game</button>
     <button onClick="joinGame()">Join Game</button>
-    <button onClick="startGame()">Start game</button>
-    <button onClick="dropChip()">Drop Chip</button>
+
+    <h4 style="margin-bottom: 1px;">Drop chip in column:</h4>
+    <table>
+        <tr>
+            <td><button onClick="dropChip(0)">0</button></td>
+            <td><button onClick="dropChip(1)">1</button></td>
+            <td><button onClick="dropChip(2)">2</button></td>
+            <td><button onClick="dropChip(3)">3</button></td>
+            <td><button onClick="dropChip(4)">4</button></td>
+            <td><button onClick="dropChip(5)">5</button></td>
+            <td><button onClick="dropChip(6)">6</button></td>
+        </tr>
+    </table>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
       const socket = io("http://192.168.1.92:3000", { transports: ['websocket', 'polling', 'flashsocket'] });
 
+      socket.on("start_game", () => {
+        console.log('Game has started')
+      })
+
       socket.on("game_state", (state) => {
         console.log('state', state)
       })
 
-      let joinCode
+      socket.on("game_over", (resp) => {
+        console.log('GAME OVER. Winner is', resp.winner)
+      })
 
       function newGame() {
-        console.log('New game')
+        console.log('New game', socket.id)
 
         socket.emit("new_game", {}, (error, resp) => {
             if (error)
                 return console.error(error)
 
             console.log(`Created lobby with code ${resp.joinCode}`)
-            joinCode = resp.joinCode
         });
       }
 
       function joinGame() {
-        console.log('Join game')
+        let joinCode = document.getElementById("joinCode").value
 
-        socket.emit("join_game", {joinCode: joinCode}, (error, resp) => {
+        console.log(`Join game with code ${joinCode}`)
+
+        socket.emit("join_game", {joinCode: joinCode}, (error) => {
             if (error)
                 return console.error(error)
 
@@ -46,25 +65,14 @@
         });
       }
 
-      function startGame() {
-        console.log('Start game')
+      function dropChip(column) {
+        console.log('Drop chip in column', column)
 
-        socket.emit("start_game", {}, (error) => {
-            if (error)
-                return console.error(error)
-
-            console.log(`Started game`)
-        });
-      }
-
-      function dropChip() {
-        console.log('Drop chip')
-
-        socket.emit("drop_chip", {column: 0}, (error) => {
+        socket.emit("drop_chip", {column: column}, (error) => {
             if (error)
                 return console.error(error)
             
-            console.log(`Dropped chip`)
+            console.log(`Dropped chip in column ${column}`)
         });
       }
     </script>
