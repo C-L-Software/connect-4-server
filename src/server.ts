@@ -17,7 +17,7 @@ app.get('/test', (_req, res) => {
 const server = http.createServer(app)
 const io = new socketio.Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'http://jlemon.org:4533',
     methods: ['GET', 'POST']
   }
 })
@@ -25,6 +25,6 @@ const gameManager = new GameManager()
 
 io.on('connection', (socket: socketio.Socket) => { gameManager.onConnection(socket) })
 
-server.listen(3000, () => {
-  console.log('Running at localhost:3000')
+server.listen(4533, () => {
+  console.log('Running at localhost:4533')
 })

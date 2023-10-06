@@ -42,7 +42,7 @@
       })
 
       function newGame() {
-        console.log('New game', socket.id)
+        console.log('Player with id', socket.id, 'has created a new game')
 
         socket.emit("new_game", {}, (error, resp) => {
             if (error)
