@@ -17,7 +17,7 @@ app.get('/test', (_req, res) => {
 const server = http.createServer(app)
 const io = new socketio.Server(server, {
   cors: {
-    origin: 'http://jlemon.org:4533',
+    origin: 'https://jlemon.org',
     methods: ['GET', 'POST']
   }
 })
